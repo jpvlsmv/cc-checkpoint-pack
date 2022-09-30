@@ -1,0 +1,11 @@
+output: default
+streamtags: []
+groups: {}
+asyncFuncTimeout: 1000
+functions:
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: Parse and aggregate Checkpoint product=Firewall logs
+description: Pipeline to handle data from product=Firewall
