@@ -30,7 +30,8 @@ functions:
     filter: "true"
     disabled: null
     conf:
-      remove: []
+      remove:
+        - "bytes"
     description: Explicitly remove fields to be dropped from output
   - id: comment
     filter: "true"
@@ -45,6 +46,7 @@ functions:
       fields:
         - "!_*"
         - "!sequencenum"
+        - "!action"
         - "*"
       dstField: unrecognized_fields
       cleanFields: false
@@ -78,6 +80,7 @@ functions:
         - min(sequencenum)
         - max(sequencenum)
         - values(unrecognized_fields)
+        - last(action)
       cumulative: false
       flushOnInputClose: true
       groupbys:
