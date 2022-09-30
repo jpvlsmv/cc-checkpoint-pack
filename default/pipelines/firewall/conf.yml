@@ -8,4 +8,153 @@ functions:
     disabled: null
     conf:
       comment: Parse and aggregate Checkpoint product=Firewall logs
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: >-
+        All fields are either to be dropped, "unrecognized", to be aggregated.
+
+
+        This is properly implemented by each field being listed in exactly 2 of the sections:
+
+
+        For something we definitely DO need,
+          * it MUST be EXcluded in the Serialize "Take all unknown fields..."
+          * it MUST have a aggregation function specified in the Aggregations
+
+        For something we definitely DO NOT need, 
+          * it MUST be INcluded as a Remove Fields in the Eval "Explicitly remove fields to be dropped" list
+          * it MUST be EXcluded (!fieldname) in the Serialize "Take all unknown fields..."
+  - id: eval
+    filter: "true"
+    disabled: null
+    conf:
+      remove: []
+    description: Explicitly remove fields to be dropped from output
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: Combine everything that's not going to be aggregated
+  - id: serialize
+    filter: "true"
+    disabled: null
+    conf:
+      type: kvp
+      fields:
+        - "!_*"
+        - "!sequencenum"
+        - "*"
+      dstField: unrecognized_fields
+      cleanFields: false
+    description: Take all remaining unknown fields into _unrecognized_fields
+  - id: mask
+    filter: "true"
+    disabled: null
+    conf:
+      rules:
+        - matchRegex: / /g
+          replaceExpr: "'%20'"
+      fields:
+        - unrecognized_fields
+      depth: 5
+    description: Replace space in unrecognized_fields with %20 so it is a single value
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: Compute the aggregated values
+  - id: aggregation
+    filter: "true"
+    disabled: false
+    conf:
+      passthrough: false
+      preserveGroupBys: false
+      sufficientStatsOnly: false
+      metricsMode: false
+      timeWindow: 60s
+      aggregations:
+        - min(sequencenum)
+        - max(sequencenum)
+        - values(unrecognized_fields)
+      cumulative: false
+      flushOnInputClose: true
+      groupbys:
+        - loguid
+    description: Aggregate expected fields
+  - id: eval
+    filter: "true"
+    disabled: false
+    conf:
+      add:
+        - name: unrecognized_fields
+          value: unrecognized_fields_values.join('%20')
+      remove:
+        - unrecognized_fields_values
+    description: Sanitize _list aggregations
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: Assemble the final result
+  - id: serialize
+    filter: "true"
+    disabled: null
+    conf:
+      type: kvp
+      fields:
+        - "!_*"
+        - "*"
+      dstField: _raw
+      cleanFields: false
+    description: Reconstruct kv pairs
+  - id: mask
+    filter: "true"
+    disabled: null
+    conf:
+      rules:
+        - matchRegex: /_last=/g
+          replaceExpr: "'='"
+        - matchRegex: /_earliest=/g
+          replaceExpr: "'='"
+      fields:
+        - _raw
+      depth: 5
+    description: Remove aggregation function from field names
+  - id: mask
+    filter: "true"
+    disabled: null
+    conf:
+      rules:
+        - matchRegex: /\s/g
+          replaceExpr: "'\\|'"
+        - matchRegex: /%20/g
+          replaceExpr: "' '"
+        - matchRegex: /="/g
+          replaceExpr: '"="'
+        - matchRegex: /"(\||$)/g
+          replaceExpr: g1
+      fields:
+        - _raw
+      depth: 5
+    description: Cleanup record separator and dequote values
+  - id: eval
+    filter: "true"
+    disabled: false
+    conf:
+      add:
+        - name: index
+          value: "'checkpoint'"
+        - name: sourcetype
+          value: "'cp_logs'"
+      keep:
+        - index
+        - souretype
+        - _raw
+        - _time
+      remove:
+        - "*"
+    description: Set required output metadata and drop fields
+    final: true
 description: Pipeline to handle data from product=Firewall
