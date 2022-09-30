@@ -57,6 +57,14 @@ functions:
         - "*"
       depth: 5
     description: Undo the safety transformations exactly once and in the opposite order.
+  - id: eval
+    filter: "true"
+    disabled: null
+    conf:
+      add:
+        - name: loguid
+          value: "'{' + loguid + '}'"
+    description: Fixup loguid value
   - id: comment
     filter: "true"
     disabled: null
