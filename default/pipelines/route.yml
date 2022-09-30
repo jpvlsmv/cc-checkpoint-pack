@@ -2,16 +2,28 @@ id: default
 groups: {}
 comments: []
 routes:
-  - id: 2U58nB
-    name: datatype1
+  - id: 8Efpk8
+    name: parse_splunkformat
+    final: false
+    disabled: false
+    pipeline: parse_splunkformat
+    description: ""
+    clones:
+      - {}
+    enableOutputExpression: false
+    outputExpression: null
+    filter: "true"
+    output: default
+  - id: mv63vS
+    name: Firewall
     final: true
     disabled: false
-    pipeline: datatype1
-    description: Direct data that looks like pattern1 to its pipeline
+    pipeline: passthru
+    description: ""
     clones: []
     enableOutputExpression: false
     outputExpression: null
-    filter: _raw.includes("datatype1")
+    filter: product=='Firewall'
     output: default
   - id: default
     name: default
