@@ -1,7 +1,7 @@
 {
-  "name":"cc-template-pack",
+  "name":"cc-checkpoint-pack",
   "version":"!!GITVER!!",
   "author":"Joe Moore (jpvlsmv) - cc",
-  "description":"Template to provide the required elements and best practices of a pack - !!GITDESCRIBE!!",
-  "displayName":"cc-template-pack"
+  "description":"Process and consolidate semi-unified log records from Checkpoint Log Exporter",
+  "displayName":"cc-checkpoint-pack"
 }
