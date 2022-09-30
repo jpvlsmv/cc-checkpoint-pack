@@ -1,0 +1,105 @@
+output: default
+streamtags: []
+groups: {}
+asyncFuncTimeout: 1000
+functions:
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: >-
+        Extract Checkpoint fields from Log Exporter Splunk format
+
+
+        The input is pipe-delimited key=value pairs.
+
+
+        Since Stream will only parse space-delimited key=value pairs, we must safely handle spaces between the pipes.
+
+
+        NOTE: a key that has spaces in it is going to be left partially mangled by this.
+  - id: mask
+    filter: "true"
+    disabled: null
+    conf:
+      rules:
+        - matchRegex: /%/g
+          replaceExpr: "'%25'"
+        - matchRegex: / /g
+          replaceExpr: "'%20'"
+        - matchRegex: /\|/g
+          replaceExpr: "' '"
+      fields:
+        - _raw
+      depth: 5
+    description: Defang % so it's safe to substitute in.  Replace space with
+      token.  Replace pipe with space
+  - id: serde
+    filter: "true"
+    disabled: false
+    conf:
+      mode: extract
+      type: kvp
+      srcField: _raw
+      cleanFields: false
+      allowedKeyChars: []
+      allowedValueChars: []
+  - id: mask
+    filter: "true"
+    disabled: false
+    conf:
+      rules:
+        - matchRegex: /%20/g
+          replaceExpr: "' '"
+        - matchRegex: /%25/g
+          replaceExpr: "'%'"
+      fields:
+        - "*"
+      depth: 5
+    description: Undo the safety transformations exactly once and in the opposite order.
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: >-
+        This pipeline can be tested against the delimiterparse.ndjson
+        sample.  The output events should be:
+
+
+        - 1 -----------------------------------
+
+        key1: value1
+
+        key2: value2
+
+        - 2 -----------------------------------
+
+        key1: value1 with spaces
+
+        key2: value2
+
+        - 3 -----------------------------------
+
+        foo: bar
+
+        key2: value2
+
+        space%20in%20key: value
+
+        - 4 -----------------------------------
+
+        annoying%20key: value with spaces too
+
+        foo: bar
+
+        key2: value2
+
+        - 5 -----------------------------------
+
+        key1: percent % togetback
+
+        key2: this_is_not%20aspace
+
+        key3: this%25isnotapercent either
+
+        ------------------------------------
