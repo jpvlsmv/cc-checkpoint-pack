@@ -150,7 +150,7 @@ functions:
           value: "'cp_logs'"
       keep:
         - index
-        - souretype
+        - sourcetype
         - _raw
         - _time
       remove:
