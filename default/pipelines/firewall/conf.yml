@@ -63,7 +63,8 @@ functions:
     disabled: null
     conf:
       type: kvp
-      fields:        - "!_*"
+      fields:
+        - "!_*"
         - "!action"
         - "!alert"
         - "!bytes"
