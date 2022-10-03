@@ -7,7 +7,7 @@ functions:
     filter: "true"
     disabled: null
     conf:
-      comment: Parse and aggregate Checkpoint product=Firewall logs
+      comment: Parse and aggregate Checkpoint product=whatever logs
   - id: comment
     filter: "true"
     disabled: null

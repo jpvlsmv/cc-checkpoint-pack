@@ -18,12 +18,23 @@ routes:
     name: Firewall
     final: true
     disabled: false
-    pipeline: passthru
+    pipeline: firewall
     description: ""
     clones: []
     enableOutputExpression: false
     outputExpression: null
     filter: product=='Firewall'
+    output: default
+  - id: 9eq1v1
+    name: IPS
+    final: true
+    disabled: false
+    pipeline: ips
+    description: ""
+    clones: []
+    enableOutputExpression: false
+    outputExpression: null
+    filter: product=='IPS'
     output: default
   - id: default
     name: default
