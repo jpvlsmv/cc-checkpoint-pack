@@ -23,9 +23,7 @@ jobs:
         if: github.event.inputs.git-ref != ''
         with:
           ref: ${{github.event.inputs.git-ref}}
-          
-      - name: fetch tags
-        run: git fetch --tags origin
+          fetch-depth: 0
 
       - name: Get GitHub slug info
         uses: rlespinasse/github-slug-action@3.5.1
