@@ -1,6 +1,6 @@
 {
   "name":"cc-checkpoint-pack",
-  "version":"0.3.2+PRE",
+  "version":"0.3.4+PRE",
   "author":"Joe Moore (jpvlsmv) - cc",
   "description":"Process and consolidate semi-unified log records from Checkpoint Log Exporter",
   "displayName":"cc-checkpoint-pack"
