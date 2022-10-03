@@ -44,8 +44,42 @@ functions:
       type: kvp
       fields:
         - "!_*"
+        - "!action"
+        - "!attack"
+        - "!attack_info"
+        - "!confidence_level"
+        - "!cribl_breaker"
+        - "!cribl_pipe"
+        - "!dst"
+        - "!host"
+        - "!hostname"
+        - "!ifdir"
+        - "!ifname"
+        - "!index"
+        - "!loguid"
+        - "!origin"
+        - "!originsicname"
+        - "!performance_impact"
+        - "!product"
+        - "!protection_id"
+        - "!protection_name"
+        - "!protection_type"
+        - "!proto"
+        - "!rule"
+        - "!rule_name"
+        - "!rule_uid"
+        - "!s_port"
         - "!sequencenum"
-        - "*"
+        - "!service"
+        - "!severity"
+        - "!smartdefense_profile"
+        - "!sourcetype"
+        - "!src"
+        - "!sub_policy_name"
+        - "!sub_policy_uid"
+        - "!time"
+        - "!version"
+
       dstField: unrecognized_fields
       cleanFields: false
     description: Take all remaining unknown fields into _unrecognized_fields
@@ -78,6 +112,46 @@ functions:
         - min(sequencenum)
         - max(sequencenum)
         - values(unrecognized_fields)
+        - last(action)
+        - last(attack)
+        - last(attack_info)
+        - last(confidence_level)
+        - last(dst)
+        - last(ifdir)
+        - last(ifname)
+        - last(origin)
+        - last(originsicname)
+        - last(performance_impact)
+        - last(product)
+        - last(protection_id)
+        - last(protection_name)
+        - last(protection_type)
+        - last(proto)
+        - last(rule)
+        - last(rule_name)
+        - last(rule_uid)
+        - last(s_port)
+        - last(logid)
+        - last(match_id)
+        - last(message_info)
+        - last(origin)
+        - last(originsicname)
+        - last(outzone)
+        - last(product)
+        - last(proto)
+        - last(protocol)
+        - last(service)
+        - last(severity)
+        - last(smartdefense_profile)
+        - last(src)
+        - last(sub_policy_name)
+        - last(version)
+        - last(src)
+        - min(start_time)
+        - min(time)
+        - max(time)
+        - last(src_uo_name)
+        - values(hll_key).as(hll_key_list)
       cumulative: false
       flushOnInputClose: true
       groupbys:
@@ -88,10 +162,22 @@ functions:
     disabled: false
     conf:
       add:
+        - name: rule_names
+          value: rule_name_list.join(',')
+        - name: hll_keys
+          value: hll_key_list.join(',')
+        - name: rule_uids
+          value: rule_uid_list.join(',')
+        - name: sig_ids
+          value: sig_id_list.join(',')
         - name: unrecognized_fields
           value: unrecognized_fields_values.join('%20')
       remove:
+        - hll_key_list
+        - rule_name_list
+        - rule_uid_list
         - unrecognized_fields_values
+        - sig_id_list
     description: Sanitize _list aggregations
   - id: comment
     filter: "true"
@@ -157,4 +243,4 @@ functions:
         - "*"
     description: Set required output metadata and drop fields
     final: true
-description: Pipeline to handle data from product=Firewall
+description: Pipeline to handle data from product=IPS
