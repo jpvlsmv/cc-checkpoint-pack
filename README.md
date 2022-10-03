@@ -2,7 +2,9 @@
 This pack filters and reduces log data from Checkpoint Log Exporter.
 
 ## Requirements
-Checkpoint Log Exporter is configured as per <link> to send data in Splunk format and Semi-Unified mode.
+Checkpoint Log Exporter is configured as per <link> to send data in Splunk format and Semi-Unified mode.  See
+https://supportcenter.checkpoint.com/supportcenter/portal?eventSubmit_doGoviewsolutiondetails=&solutionid=sk122323 for more
+information on how to configure the log exporter
 
 ## Release Notes
 I have never released this pack before
