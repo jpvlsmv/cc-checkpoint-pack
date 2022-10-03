@@ -41,9 +41,15 @@ jobs:
 
       - name: Pack it up!
         run: tar -cvzf /tmp/${{ github.event.repository.name }}-${{ env.GITHUB_SHA_SHORT }}-${{ env.GITHUB_REF_SLUG_CS }}.crbl *
+        
+      - name: Upload artifact
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v3
+        with:
+          path: /tmp/${{ github.event.repository.name }}-${{ env.GITHUB_SHA_SHORT }}-${{ env.GITHUB_REF_SLUG_CS }}.crbl
 
       - name: Release
-        if: ${{ success() }}
+        if: ${{ success() && github.event.inputs.git-ref == '' }}
         id: release
         uses: softprops/action-gh-release@5e3f23f92c903aac25270f66388fdcb366c5b549
         with:
