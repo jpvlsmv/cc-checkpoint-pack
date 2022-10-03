@@ -46,6 +46,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/upload-artifact@v3
         with:
+          name: ${{ github.event.repository.name }}-${{ env.GITHUB_SHA_SHORT }}-${{ env.GITHUB_REF_SLUG_CS }}.crbl
           path: /tmp/${{ github.event.repository.name }}-${{ env.GITHUB_SHA_SHORT }}-${{ env.GITHUB_REF_SLUG_CS }}.crbl
 
       - name: Release
@@ -59,7 +60,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get release info
-        if: ${{ success() }}
+        if: ${{ success() && github.event.inputs.git-ref == '' }}
         id: release_info
         uses: cardinalby/git-get-release-action@1.1.1
         with:
@@ -68,6 +69,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract timestamp
-        if: ${{ success() }}
+        if: ${{ success() && github.event.inputs.git-ref == '' }}
         run: |
           echo "TIMESTAMP=$(date +%s -d "${{ steps.release_info.outputs.published_at }}")" >> $GITHUB_ENV
