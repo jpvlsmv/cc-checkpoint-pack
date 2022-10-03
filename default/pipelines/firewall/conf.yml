@@ -32,6 +32,26 @@ functions:
     conf:
       remove:
         - "bytes"
+        - client_inbound_interface
+        - client_outbound_interface
+        - cribl_breaker
+        - dst_uo_icon
+        - elapsed
+        - ifname
+        - lastupdatetime
+        - layer_uuid
+        - log_delay
+        - nat_addtlnl_rulenum
+        - nat_rulenum
+        - needs_browse_time
+        - packets
+        - parent_rule
+        - rule_uid
+        - segment_time
+        - server_inbound_*
+        - server_outbound_*
+        - src_uo_icon
+        - version
     description: Explicitly remove fields to be dropped from output
   - id: comment
     filter: "true"
@@ -43,11 +63,74 @@ functions:
     disabled: null
     conf:
       type: kvp
-      fields:
-        - "!_*"
-        - "!sequencenum"
+      fields:        - "!_*"
         - "!action"
+        - "!alert"
+        - "!bytes"
+        - "!client_inbound_*"
+        - "!client_outbound_*"
+        - "!conn_direction"
+        - "!context_num"
+        - "!contextnum"
+        - "!cribl_breaker"
+        - "!cribl_pipe"
+        - "!dst"
+        - "!dst_uo*"
+        - "!elapsed"
+        - "!fw_message"
+        - "!host"
+        - "!hostname"
+        - "!icmp"
+        - "!icmp_code"
+        - "!icmp_type"
+        - "!ifdir"
+        - "!ifname"
+        - "!index"
+        - "!inzone"
+        - "!lastupdatetime"
+        - "!layer_name"
+        - "!layer_uid"
+        - "!log_delay"
+        - "!logid"
+        - "!match_id"
+        - "!message_info"
+        - "!nat_addtnl_rulenum"
+        - "!needs_browse_time"
+        - "!origin"
+        - "!originsicname"
+        - "!outzone"
+        - "!packets"
+        - "!parent_rule"
+        - "!product"
+        - "!proto"
+        - "!protocol"
+        - "!reason"
+        - "!rule_action"
+        - "!rule_name"
+        - "!rule_id"
+        - "!s_port"
+        - "!segment_time"
+        - "!sequencenum"
+        - "!server_inbound_*"
+        - "!service"
+        - "!service_id"
+        - "!sig_id"
+        - "!source_object"
+        - "!sourcetype"
+        - "!src"
+        - "!src_uo_icon"
+        - "!src_uo_name"
+        - "!start_time"
+        - "!time"
+        - "!version"
+        - "!xlatedport"
+        - "!xlatedst"
+        - "!xlatesrc"
+        - "!hll_key"
+        - "!xlatesport"
+        - "!loguid"
         - "*"
+
       dstField: unrecognized_fields
       cleanFields: false
     description: Take all remaining unknown fields into _unrecognized_fields
@@ -81,6 +164,55 @@ functions:
         - max(sequencenum)
         - values(unrecognized_fields)
         - last(action)
+        - last(alert)
+        - last(client_inbound_bytes)
+        - last(client_inbound_packets)
+        - last(client_outbound_bytes)
+        - last(client_outbound_packets)
+        - last(conn_direction)
+        - last(context_num)
+        - last(contextnum)
+        - last(dst)
+        - last(dst_uo_name)
+        - last(fw_message)
+        - values(hll_key).as(hll_key_list)
+        - last(host)
+        - last(hostname)
+        - last(icmp)
+        - last(icmp_code)
+        - last(icmp_type)
+        - last(ifdir)
+        - last(inzone)
+        - last(layer_name)
+        - last(logid)
+        - last(match_id)
+        - last(message_info)
+        - last(origin)
+        - last(originsicname)
+        - last(outzone)
+        - last(product)
+        - last(proto)
+        - last(protocol)
+        - last(reason)
+        - last(rule_action)
+        - last(time)
+        - values(rule_uid).as(rule_uid_list)
+        - values(rule_name).as(rule_name_list)
+        - last(s_port)
+        - last(service)
+        - last(service_id)
+        - values(sig_id).as(sig_id_list)
+        - last(source_object)
+        - last(src)
+        - min(start_time)
+        - min(time)
+        - max(time)
+        - last(src_uo_name)
+        - last(xlatedport)
+        - last(xlatedst)
+        - last(xlatesport)
+        - last(xlatesrc)
+        - values(unrecognized_fields)
       cumulative: false
       flushOnInputClose: true
       groupbys:
@@ -91,10 +223,22 @@ functions:
     disabled: false
     conf:
       add:
+        - name: rule_names
+          value: rule_name_list.join(',')
+        - name: hll_keys
+          value: hll_key_list.join(',')
+        - name: rule_uids
+          value: rule_uid_list.join(',')
+        - name: sig_ids
+          value: sig_id_list.join(',')
         - name: unrecognized_fields
           value: unrecognized_fields_values.join('%20')
       remove:
+        - hll_key_list
+        - rule_name_list
+        - rule_uid_list
         - unrecognized_fields_values
+        - sig_id_list
     description: Sanitize _list aggregations
   - id: comment
     filter: "true"
@@ -108,9 +252,16 @@ functions:
       type: kvp
       fields:
         - "!_*"
+        - "!sourcetype"
+        - "!index"
+        - "!host"
         - "*"
       dstField: _raw
       cleanFields: false
+      delimChar: "|"
+      quoteChar: '"'
+      escapeChar: \
+      nullValue: "-"
     description: Reconstruct kv pairs
   - id: mask
     filter: "true"
@@ -152,6 +303,7 @@ functions:
         - name: sourcetype
           value: "'cp_logs'"
       keep:
+        - host
         - index
         - sourcetype
         - _raw
