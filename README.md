@@ -38,9 +38,13 @@ knowledge of the future, which most SIEM platforms have difficulty with, not to 
 discarding the prior events.  Each intermediate event that would be discarded later still consumes resources in the 
 SIEM -- storage and processing, often with significant impact on licensing cost.
 
-To visualize this, if you look at the FIXME:`cp_fw_onesession.log` sample, you will see that there are multiple logs 
-with the same `loguid` which build upon each other. In this example if you observe the `bytes` field, we first see a 
-log with 10 bytes, then 1 second later we get an entire new log event increasing to 20 bytes.
+To visualize this, if you look at the `cp_fw_onesession` sample (firewall pipeline, IN mode, show as columnar)
+, you will see that there are multiple events with the same `loguid` which build upon each other. In this example 
+if you observe the `bytes` field, we first see a log with 4568 bytes, then 1 second later we get an entire new log 
+event updating it to 27897 bytes.  At some point between these two, the client sent 44 packets out to the external
+web server, and the web server returned 20 or so.  As you can also see, nearly all of the fields in these records
+are identical.  The OUT view of this sample shows the single event that would be passed along to the output, after
+a 91% reduction in _raw length.
 
 This pack can place Cribl Stream between the log exporter and the SIEM.  The Stream worker will act as a short-term 
 cache for the semi-unified log records, and if an update is received for a specific loguid, will retain only the most 
