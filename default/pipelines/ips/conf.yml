@@ -79,7 +79,6 @@ functions:
         - "!sub_policy_uid"
         - "!time"
         - "!version"
-
       dstField: unrecognized_fields
       cleanFields: false
     description: Take all remaining unknown fields into _unrecognized_fields

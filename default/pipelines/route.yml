@@ -36,14 +36,3 @@ routes:
     outputExpression: null
     filter: product=='IPS'
     output: default
-  - id: default
-    name: default
-    final: true
-    disabled: false
-    pipeline: main
-    description: ""
-    clones: []
-    enableOutputExpression: false
-    outputExpression: null
-    filter: "true"
-    output: default
