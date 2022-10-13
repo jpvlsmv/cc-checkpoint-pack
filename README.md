@@ -9,6 +9,14 @@ event data.
 3. Create a global route that filters for the checkpoint data: Set the pipeline to cc-checkpoint-pack and specify 
    the Data Destination to your SIEM
    
+
+## Data that is processed by the pack
+| Event Type | pipeline | Sample Name      |
+|------------|----------|------------------|
+| Firewall   | [Firewall](default/pipelines/firewall/README.md) | cp_fw_onesession |
+| IPS   | [IPS](default/pipelines/ips/README.md) | cp_ips |
+
+   
 ## Your own fields
 1. Have a sample of the data you want to aggregate
 2. Clone the `aggregating` pipeline to your own pipeline name and Preview your sample
@@ -61,11 +69,6 @@ times over their lifetime.
 
 In one real-world practice, this pack has shown a 20:1 reduction in SIEM volume sent to the Splunk instance, from 
 700GB/day to under 35GB/day.
-
-### Data that is processed by the pack
-| Event Type | pipeline | Sample Name      |
-|------------|----------|------------------|
-| Firewall   | Firewall | cp_firewall.json |
 
 ## Data Flow diagram
 ```mermaid
