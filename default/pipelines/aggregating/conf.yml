@@ -7,7 +7,10 @@ functions:
     filter: "true"
     disabled: null
     conf:
-      comment: Parse and aggregate Checkpoint product=whatever logs
+      comment: |-
+        Example empty checkpoint-aggregating pipeline.
+
+        Duplicate this pipeline to identify specific fields to aggregate on.
   - id: comment
     filter: "true"
     disabled: null
@@ -141,7 +144,7 @@ functions:
     description: Cleanup record separator and dequote values
   - id: eval
     filter: "true"
-    disabled: false
+    disabled: true
     conf:
       add:
         - name: index
@@ -157,4 +160,4 @@ functions:
         - "*"
     description: Set required output metadata and drop fields
     final: true
-description: Pipeline to handle data from product=Firewall
+description: Example pipeline, clone to define new aggregation set
