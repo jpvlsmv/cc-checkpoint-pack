@@ -8,6 +8,14 @@ event data.
 2. Configure checkpoint to export logs to workers
 3. Create a global route that filters for the checkpoint data: Set the pipeline to cc-checkpoint-pack and specify 
    the Data Destination to your SIEM
+   
+## Your own fields
+1. Have a sample of the data you want to aggregate
+2. Clone the `aggregating` pipeline to your own pipeline name and Preview your sample
+3. Note the field names embedded in the `unrecognized_fields` column (turn off step `14[F] Eval`)
+4. Decide what to do with it.  Add it to `3. Eval Explicitly remove fields...` or to both `5. Serialize` (as
+!fieldname) and `8. Aggregations` with the appropriate aggregation function.
+5. Create a route in the pack to direct the appropriate data to your new pipeline
 
 ## Requirements
 Checkpoint Log Exporter is configured as per <link> to send data in Splunk format and Semi-Unified mode.  See 
