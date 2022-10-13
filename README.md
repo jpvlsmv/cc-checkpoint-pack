@@ -8,6 +8,14 @@ event data.
 2. Configure checkpoint to export logs to workers
 3. Create a global route that filters for the checkpoint data: Set the pipeline to cc-checkpoint-pack and specify 
    the Data Destination to your SIEM
+   
+## Your own fields
+1. Have a sample of the data you want to aggregate
+2. Clone the `aggregating` pipeline to your own pipeline name and Preview your sample
+3. Note the field names embedded in the `unrecognized_fields` column (turn off step `14[F] Eval`)
+4. Decide what to do with it.  Add it to `3. Eval Explicitly remove fields...` or to both `5. Serialize` (as
+!fieldname) and `8. Aggregations` with the appropriate aggregation function.
+5. Create a route in the pack to direct the appropriate data to your new pipeline
 
 ## Requirements
 Checkpoint Log Exporter is configured as per <link> to send data in Splunk format and Semi-Unified mode.  See 
@@ -38,9 +46,13 @@ knowledge of the future, which most SIEM platforms have difficulty with, not to 
 discarding the prior events.  Each intermediate event that would be discarded later still consumes resources in the 
 SIEM -- storage and processing, often with significant impact on licensing cost.
 
-To visualize this, if you look at the FIXME:`cp_fw_onesession.log` sample, you will see that there are multiple logs 
-with the same `loguid` which build upon each other. In this example if you observe the `bytes` field, we first see a 
-log with 10 bytes, then 1 second later we get an entire new log event increasing to 20 bytes.
+To visualize this, if you look at the `cp_fw_onesession` sample (firewall pipeline, IN mode, show as columnar)
+, you will see that there are multiple events with the same `loguid` which build upon each other. In this example 
+if you observe the `bytes` field, we first see a log with 4568 bytes, then 1 second later we get an entire new log 
+event updating it to 27897 bytes.  At some point between these two, the client sent 44 packets out to the external
+web server, and the web server returned 20 or so.  As you can also see, nearly all of the fields in these records
+are identical.  The OUT view of this sample shows the single event that would be passed along to the output, after
+a 91% reduction in _raw length.
 
 This pack can place Cribl Stream between the log exporter and the SIEM.  The Stream worker will act as a short-term 
 cache for the semi-unified log records, and if an update is received for a specific loguid, will retain only the most 
