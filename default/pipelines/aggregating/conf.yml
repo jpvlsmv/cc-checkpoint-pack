@@ -144,7 +144,7 @@ functions:
     description: Cleanup record separator and dequote values
   - id: eval
     filter: "true"
-    disabled: false
+    disabled: true
     conf:
       add:
         - name: index

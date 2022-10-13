@@ -8,8 +8,25 @@ ph7DcW:
   created: 1664556412317
   size: 639
   numEvents: 5
-PREvrI:
-  sampleName: cp_fw_onesession
-  created: 1665068291317
-  size: 27434
+PtfYVW:
+  sampleName: onesession_raw
+  isPackOnly: true
+  size: 13285
   numEvents: 9
+diPds9:
+  sampleName: cp_fw_onesession
+  ttl: 0
+  isPackOnly: true
+  size: 27726
+  numEvents: 9
+ApI2r4:
+  sampleName: cp_ips_raw
+  created: 1665686063785
+  size: 173617
+  numEvents: 200
+49dEZ0:
+  sampleName: cp_ips
+  ttl: 0
+  created: 1665686098581
+  size: 383923
+  numEvents: 200

@@ -316,5 +316,6 @@ functions:
     filter: "true"
     disabled: null
     conf:
-      comment: "This pipeline can be tested against "
+      comment: This pipeline can be tested against cp_fw_onesession to produce 1
+        aggregated event
 description: Pipeline to handle data from product=Firewall
