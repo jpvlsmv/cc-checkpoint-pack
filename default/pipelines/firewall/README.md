@@ -1,5 +1,10 @@
 # Pipeline to process product=Firewall data
 
+## Samples
+|Sample name|Use|
+|-----------|---|
+|cp_fw_onesession|Log records received for a single loguid.  Demonstrates the field reductions and aggregations|
+
 ## Field dictionary
 
 ### Remove fields
