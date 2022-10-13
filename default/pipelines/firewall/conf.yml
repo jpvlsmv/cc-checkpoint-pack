@@ -31,7 +31,7 @@ functions:
     disabled: null
     conf:
       remove:
-        - "bytes"
+        - bytes
         - client_inbound_interface
         - client_outbound_interface
         - cribl_breaker
@@ -131,7 +131,6 @@ functions:
         - "!xlatesport"
         - "!loguid"
         - "*"
-
       dstField: unrecognized_fields
       cleanFields: false
     description: Take all remaining unknown fields into _unrecognized_fields
@@ -313,4 +312,9 @@ functions:
         - "*"
     description: Set required output metadata and drop fields
     final: true
+  - id: comment
+    filter: "true"
+    disabled: null
+    conf:
+      comment: "This pipeline can be tested against "
 description: Pipeline to handle data from product=Firewall

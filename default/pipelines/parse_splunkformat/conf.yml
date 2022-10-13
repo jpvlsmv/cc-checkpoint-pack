@@ -111,3 +111,4 @@ functions:
         key3: this%25isnotapercent either
 
         ------------------------------------
+description: Separate out format=splunk checkpoint logs into component fields
